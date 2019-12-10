@@ -1,0 +1,158 @@
+//Auto Format (Ctrl-T)
+/**********************************************************************
+ * NEURAL NETWORK 
+ * Designed by :
+ 
+   ______                            
+  / ____/___ ___  ___________ __   __
+ / / __/ __ `/ / / / ___/ __ `/ | / /
+/ /_/ / /_/ / /_/ / /  / /_/ /| |/ / 
+\____/\__,_/\__,_/_/   \__,_/ |___/ 
+ 
+    __ __ __          _                      
+   / //_// /_  ____ _(_)________  ____ ______
+  / ,<  / __ \/ __ `/ / ___/ __ \/ __ `/ ___/
+ / /| |/ / / / /_/ / / /  / / / / /_/ / /    
+/_/ |_/_/ /_/\__,_/_/_/  /_/ /_/\__,_/_/     
+ 
+ ****************************************************************
+ //July 2019
+ 
+ @ Website : gaurav1620.rf.gd
+ @ Github  : gaurav1620
+ @ Insta   : may_be_gaurav 
+ @ Gmail   : gauravak007@gmail.com
+ 
+ */
+//************************************************************************************************
+int ct = 4;
+int snakes = 4;
+int foods = 100;
+ArrayList<snake> s = new ArrayList<snake>(snakes);
+ArrayList<food> f = new ArrayList<food>(foods);
+ArrayList<snake> ss = new ArrayList<snake>(snakes);
+NeuralNetwork brainCopy;
+
+void setup() {
+  frameRate(100);
+  size(900, 600);
+  background(0);
+  makeNewSnakes();
+  
+  for(int i = 0;i < foods;i++){
+    food g = new food();
+    f.add(g);
+  }
+}
+//*****************************************************************************************************
+
+void draw(){
+  //println(s.b.size());
+  
+  background(0);
+  
+  //while(s.size() < foods){
+    //println("Check while");
+    //food g = new food();
+    //foods++;
+    //f.add(g);
+  //}
+  
+  
+  showFoods();
+  
+  //println("Check");
+  for(int i = 0;i < snakes;i++){
+    //if(s.get(i).hit()){
+    //  s.remove(i);
+    //  snakes--;
+    //}
+    s.get(i).doPredictedMovement(f);
+    
+    int h = s.get(i).checkEat(f);
+    if(h!= -1){
+      foods--;
+      s.get(i).fitness += 10;
+    }
+    //s.get(i).mutate();
+    s.get(i).update(); 
+    println("Hello");
+    s.get(i).show();
+    //s.get(i).fitness++;
+    
+    if(s.get(i).hit()){
+      println(i," : hit");
+      ss.add(s.get(i));
+      s.remove(i);
+      snakes--;
+    }
+    //if(snakes == 1){
+    //  brainCopy = s.get(0).brain;
+    //  println("Fitness",s.get(0).fitness);
+    //}
+    if(snakes == 0){
+      println("New snakes called");
+      makeNewSnakes();
+    }
+    
+  } 
+  //println(snakes);
+}
+
+void makeNewSnakes(NeuralNetwork b){
+  snakes = ct;
+  //NeuralNetwork cp = b;
+  for(int i = 0;i < snakes;i++){
+    NeuralNetwork cp = b;
+    cp.mutate();
+    s.add(new snake(cp));
+  }
+}
+
+void makeNewSnakes(){
+
+  NeuralNetwork gs = ss.get(0).brain;
+
+  float highestFitness = 0;
+  for(snake d : ss){
+    if(d.fitness > highestFitness){
+      gs = d.brain;
+    }
+  }
+  gs.mutate();
+  makeNewSnakes(gs);
+}
+
+void showFoods(){
+  for(int i = 0;i < foods;i++){
+    f.get(i).show();
+  }
+}
+
+
+
+
+//*******************************************************************************************************
+//void setup(){
+
+////  Matrix m = new Matrix(3,5);
+////  Matrix n = new Matrix(5,3);
+
+////  m.randomizeInt(10);
+////  n.randomizeInt(10);
+//  NeuralNetwork nn = new NeuralNetwork(4,8,2);
+//  nn.init();
+
+//  Matrix m = new Matrix(4,1);
+//  m.randomizeInt(0,2);
+//  nn.inputs = m;
+
+//  Matrix results = nn.feedForward();
+//  println("*****************");
+//  results.display();
+//  println("*****************");
+//  nn.mutate();
+//  results = nn.feedForward();
+//  results.display();
+
+//}
